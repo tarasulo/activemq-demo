@@ -24,10 +24,7 @@ public class MessageReceiver {
         // Getting JMS connection from the server
         ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
 
-        // the eternal cycle for receiving random string messages
-        Connection connection = null;
-//        try {
-            connection = connectionFactory.createConnection();
+        Connection connection = connectionFactory.createConnection();
 
             // Creating session for receiving messages
             Session session = connection.createSession(false,
@@ -40,23 +37,6 @@ public class MessageReceiver {
             MessageConsumer consumer = session.createConsumer(destination);
             consumer.setMessageListener(new ConsumerMessageListener("Consumer"));
             connection.start();
-            Thread.sleep(1000);
-            session.close();
-//        } finally {
-//            if (connection != null) {
-//                connection.close();
-//            }
-//        }
-        // Here we receive the message.
-        //Message message = consumer.receive();
-
-        // We will be using TestMessage in our example. MessageProducer sent us a TextMessage
-        // so we must cast to it to get access to its .getText() method.
-//            if (message instanceof TextMessage) {
-//                TextMessage textMessage = (TextMessage) message;
-//                System.out.println("Received message '" + textMessage.getText() + "'");
-//            }
-//            connection.close();
 
     }
 }
