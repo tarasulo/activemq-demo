@@ -2,10 +2,12 @@ package tkhal.boot.activemq.activeMqExample;
 
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.log4j.Logger;
 
 import javax.jms.*;
 
 public class ObjectSender {
+    final static Logger logger = Logger.getLogger(ObjectSender.class);
     //URL of the JMS server. DEFAULT_BROKER_URL will just mean that JMS server is on localhost
     private static String url = ActiveMQConnection.DEFAULT_BROKER_URL;
     private static Item book = new Item("book", 2019, 199.99);
@@ -13,9 +15,10 @@ public class ObjectSender {
     // default broker URL is : tcp://localhost:61616"
     private static String subject = "JCG_QUEUE"; // Queue Name.You can create any/many queue names as per your requirement.
 
-    public static void main(String[] args) throws JMSException {
+    public static void main(String[] args) {
         // Getting JMS connection from the server and starting it
-        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
+        try {
+            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
 
             Connection connection = connectionFactory.createConnection();
             connection.start();
@@ -39,6 +42,11 @@ public class ObjectSender {
             producer.send(message);
 
             System.out.println("JCG sending@@ '" + book + "'");
+            logger.info("JCG sending@@ '" + book + "'");
             connection.close();
+        } catch (JMSException e) {
+            logger.error("No connection" + e);
         }
+
+    }
 }
