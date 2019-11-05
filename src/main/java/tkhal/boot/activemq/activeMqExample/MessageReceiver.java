@@ -22,30 +22,35 @@ public class MessageReceiver {
     private static String subject = "JCG_QUEUE";
 
     public static void main(String[] args) throws JMSException {
+
         // Getting JMS connection from the server
         ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
-        Connection connection = connectionFactory.createConnection();
-        connection.start();
 
-        // Creating session for seding messages
-        Session session = connection.createSession(false,
-                Session.AUTO_ACKNOWLEDGE);
+        // the eternal cycle for receiving random string messages
+        while (true) {
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
 
-        // Getting the queue 'JCG_QUEUE'
-        Destination destination = session.createQueue(subject);
+            // Creating session for seding messages
+            Session session = connection.createSession(false,
+                    Session.AUTO_ACKNOWLEDGE);
 
-        // MessageConsumer is used for receiving (consuming) messages
-        MessageConsumer consumer = session.createConsumer(destination);
+            // Getting the queue 'JCG_QUEUE'
+            Destination destination = session.createQueue(subject);
 
-        // Here we receive the message.
-        Message message = consumer.receive();
+            // MessageConsumer is used for receiving (consuming) messages
+            MessageConsumer consumer = session.createConsumer(destination);
 
-        // We will be using TestMessage in our example. MessageProducer sent us a TextMessage
-        // so we must cast to it to get access to its .getText() method.
-        if (message instanceof TextMessage) {
-            TextMessage textMessage = (TextMessage) message;
-            System.out.println("Received message '" + textMessage.getText() + "'");
+            // Here we receive the message.
+            Message message = consumer.receive();
+
+            // We will be using TestMessage in our example. MessageProducer sent us a TextMessage
+            // so we must cast to it to get access to its .getText() method.
+            if (message instanceof TextMessage) {
+                TextMessage textMessage = (TextMessage) message;
+                System.out.println("Received message '" + textMessage.getText() + "'");
+            }
+            connection.close();
         }
-        connection.close();
     }
 }
