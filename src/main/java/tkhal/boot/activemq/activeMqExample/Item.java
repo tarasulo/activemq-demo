@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class Item implements Serializable {
     private String name;
-    private Integer year;
-    private Double price;
+    private int year;
+    private double price;
 
     @Override
     public String toString() {

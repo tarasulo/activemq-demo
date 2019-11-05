@@ -4,7 +4,13 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import javax.jms.*;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
+import javax.jms.TextMessage;
 
 public class MessageSender {
     //URL of the JMS server. DEFAULT_BROKER_URL will just mean that JMS server is on localhost
@@ -23,7 +29,7 @@ public class MessageSender {
             String generatedString = RandomStringUtils.randomAlphabetic(10);
             Connection connection = connectionFactory.createConnection();
             connection.start();
-
+            connection.setExceptionListener(new MyExceptionListener());
             //Creating a non transactional session to send/receive JMS message.
             Session session = connection.createSession(false,
                     Session.AUTO_ACKNOWLEDGE);
